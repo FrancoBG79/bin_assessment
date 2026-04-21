@@ -19,9 +19,9 @@ export class FieldDefinitionsService {
   private readonly apiUrl = environment.apiUrl;
   private readonly httpClient = inject(HttpClient);
 
-  getFieldDefinitions(forEntity: string): Observable<FieldDefinitions[]> {
+  getFieldDefinitions(entity: string): Observable<FieldDefinitions[]> {
     return this.httpClient.get<FieldDefinitions[]>(`${this.apiUrl}/fields`, {
-      params: { forEntity }, observe: 'response'
+      params: { entity }, observe: 'response'
     }).pipe(
       map((response: HttpResponse<FieldDefinitions[]>) => {
         return response.body ?? [];
