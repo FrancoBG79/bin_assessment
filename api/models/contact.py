@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 
 class Contact(SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)s
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
     surname: str
     email: str
