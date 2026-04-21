@@ -5,9 +5,14 @@ import os
 sys.path.append(os.getcwd())
 
 try:
-    from api.database import create_db_and_tables
-    print("Import successful. Attempting to create tables...")
+    from api.database import create_db_and_tables, engine, seed_fields
+
+    print("Attempting to create tables...")
     create_db_and_tables()
-    print("Success! Tables created.")
+
+    print("Seeding data...")
+    seed_fields(engine)
+
+    print("Setup complete!")
 except Exception as e:
     print(f"An error occurred: {e}")
