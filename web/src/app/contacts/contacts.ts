@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs'
 
 @Component({
   selector: 'app-contacts',
-  imports: [],
+  imports: [MatTabsModule],
   templateUrl: './contacts.html',
   styleUrl: './contacts.scss',
 })
-export class Contacts {}
+export class ContactsComponent {}
