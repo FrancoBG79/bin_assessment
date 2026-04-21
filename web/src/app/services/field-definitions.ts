@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class FieldDefinitions {
+export class FieldDefinitionsService {
   private readonly apiUrl = environment.apiUrl;
   private readonly httpClient = inject(HttpClient);
 
