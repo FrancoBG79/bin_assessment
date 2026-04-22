@@ -8,7 +8,7 @@ export interface Contact {
   name: string;
   surname: string;
   email: string;
-  no_of_clients: string[];
+  no_of_clients: number;
 }
 @Injectable({
   providedIn: 'root',

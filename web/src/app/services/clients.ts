@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 export interface Client {
   name: string;
   client_code: string;
-  no_linked_contacts: string[];
+  no_linked_contacts: number;
 }
 
 @Injectable({
