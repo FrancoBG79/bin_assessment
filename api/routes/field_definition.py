@@ -6,7 +6,7 @@ from typing import List
 
 router = APIRouter(prefix="/fields", tags=["Fields"])
 
-@router.get("/", response_model=List[FieldDefinition])
+@router.get("", response_model=List[FieldDefinition])
 def read_fields(
     entity: str = Query(..., description="The entity type (clients or contacts)", min_length=1)
 ):

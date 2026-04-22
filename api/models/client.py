@@ -7,10 +7,10 @@ from sqlalchemy.dialects.postgresql import ARRAY
 class Client(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
-    client_code: str
+    client_code: str = Field(..., regex=r"^[A-Z]{3}\d{3}$")
     no_linked_contacts: List[str] = Field(default=[], sa_column=Column(ARRAY(String)))
 
 class ClientCreate(SQLModel):
     name: str
-    client_code: str
+    client_code: str = Field(..., regex=r"^[A-Z]{3}\d{3}$")
     no_linked_contacts: List[str] = []

@@ -16,4 +16,3 @@ class ContactCreate(SQLModel):
     surname: str
     email: str
     no_of_clients: List[str] = []
-

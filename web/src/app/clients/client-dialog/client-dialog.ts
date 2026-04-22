@@ -48,7 +48,7 @@ export class ClientDialog implements OnInit, OnDestroy {
   clientForm = new FormGroup({
     id: new FormControl<string>(''),
     name: new FormControl<string>('', [Validators.required]),
-    client_code: new FormControl<string>({ value: 'ABC001', disabled: true }),
+    client_code: new FormControl<string>({ value: '', disabled: true }),
     no_linked_contacts: new FormControl<string[]>({ value: [], disabled: true })
   })
 

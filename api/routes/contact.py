@@ -7,13 +7,16 @@ from api.database import get_session
 
 router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
-@router.post("/", response_model=Contact, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Contact, status_code=status.HTTP_201_CREATED)
 def create_contact(contact: ContactCreate, db: Session = Depends(get_session)):
     try:
         db_contact = Contact.model_validate(contact)
         db.add(db_contact)
         db.commit()
         db.refresh(db_contact)
+        if db_contact.no_of_clients:
+            sync_relationships(db, str(db_contact.id), [], db_contact.no_of_clients, Client, 'no_linked_contacts')
+            db.commit()
         return db_contact
     except Exception as e:
         db.rollback()
@@ -23,7 +26,7 @@ def create_contact(contact: ContactCreate, db: Session = Depends(get_session)):
             detail="Database insertion failed"
         )
 
-@router.get("/", response_model=List[Contact], status_code=status.HTTP_200_OK)
+@router.get("", response_model=List[Contact], status_code=status.HTTP_200_OK)
 def read_contacts(db: Session = Depends(get_session)):
     try:
         statement = select(Contact)
@@ -46,33 +49,23 @@ def read_contact(contact_id: uuid.UUID, db: Session = Depends(get_session)):
         )
     return contact
 
-@router.put("/", response_model=Contact, status_code=status.HTTP_200_OK)
+@router.put("", response_model=Contact, status_code=status.HTTP_200_OK)
 def update_contact(contact_data: Contact, db: Session = Depends(get_session)):
     db_contact = db.get(Contact, contact_data.id)
+    if not db_contact: raise HTTPException(status_code=404)
     
-    if not db_contact:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f"Contact with ID {contact_data.id} not found"
-        )
+    old_links = db_contact.no_of_clients.copy()
     
-    try:
-        update_data = contact_data.model_dump(exclude={'id'})
-        for key, value in update_data.items():
-            setattr(db_contact, key, value)
-        
-        db.add(db_contact)
-        db.commit()
-        db.refresh(db_contact)
-        return db_contact
-        
-    except Exception as e:
-        db.rollback()
-        print(f"Error updating contact: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update contact due to a database error."
-        )
+    update_data = contact_data.model_dump(exclude={'id'})
+    for key, value in update_data.items():
+        setattr(db_contact, key, value)
+    
+    sync_relationships(db, str(db_contact.id), old_links, contact_data.no_of_clients, Client, 'no_linked_contacts')
+    
+    db.add(db_contact)
+    db.commit()
+    db.refresh(db_contact)
+    return db_contact
 
 @router.delete("/{contact_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_contact(contact_id: str):

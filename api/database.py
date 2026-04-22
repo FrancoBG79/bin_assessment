@@ -10,7 +10,7 @@ from api.models.field_definition import FieldDefinition
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 
 def create_db_and_tables():
     # Now that the models are imported, SQLAlchemy knows about them
