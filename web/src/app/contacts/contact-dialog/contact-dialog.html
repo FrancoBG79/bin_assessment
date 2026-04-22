@@ -2,9 +2,11 @@
 
 <mat-dialog-content>
   @if (loading()) {
-    <mat-spinner></mat-spinner>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
   } @else {
-    <form class="centered-dialog-form" (ngSubmit)="onSubmit()" [formGroup]="contactForm">
+    <form class="centered-dialog-form" [formGroup]="contactForm">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name">
@@ -53,7 +55,7 @@
   <button mat-button mat-dialog-close>No Thanks</button>
   <button 
     mat-raised-button 
-    color="primary" 
-    mat-dialog-close
+    color="primary"
+    (click)="onSubmit()"
     [disabled]="contactForm.invalid">Submit</button>
 </mat-dialog-actions>

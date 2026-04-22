@@ -2,7 +2,9 @@
 
 <mat-dialog-content>
   @if (loading()) {
-    <mat-spinner></mat-spinner>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
   } @else {
     <form class="centered-dialog-form" (ngSubmit)="onSubmit()" [formGroup]="clientForm">
       <mat-form-field appearance="outline">
