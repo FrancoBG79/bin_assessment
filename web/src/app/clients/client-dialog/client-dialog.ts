@@ -15,7 +15,7 @@ import {MatInputModule} from '@angular/material/input';
 import { Contact, ContactsService } from '../../services/contacts';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from '@angular/material/select';
 import { MatOption } from "@angular/material/select";
 
@@ -34,7 +34,7 @@ interface ClientDialogData {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatProgressSpinner,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatOption
 ],
