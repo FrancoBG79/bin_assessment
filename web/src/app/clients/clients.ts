@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { Client } from '../services/clients';
+import { Client, ClientsServices } from '../services/clients';
 
 @Component({
   selector: 'app-clients',
@@ -38,6 +38,7 @@ export class ClientsComponent implements OnInit, OnDestroy  {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  private readonly clientsServices = inject(ClientsServices)
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<Client>([]);
   }
@@ -45,6 +46,11 @@ export class ClientsComponent implements OnInit, OnDestroy  {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  getClients(): void {
+    this.loading.set(true);
+
   }
 
 
