@@ -1,1 +1,59 @@
-<p>create works!</p>
+<h2 mat-dialog-title class="dialog-title">Add Contacts</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-spinner></mat-spinner>
+  } @else {
+    <form class="centered-dialog-form" (ngSubmit)="onSubmit()" [formGroup]="contactForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        @if (contactForm.get('name')?.hasError('required')) {
+          <mat-error>Name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="surname">
+        @if (contactForm.get('surname')?.hasError('required')) {
+          <mat-error>Surname is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+        @if (contactForm.get('email')?.hasError('email') && !contactForm.get('email')?.hasError('required')) {
+          <mat-error>Please enter a valid email address</mat-error>
+        }
+        @if (contactForm.get('email')?.hasError('required')) {
+          <mat-error>Name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contact</mat-label>
+        <mat-select formControlName="no_of_clients" multiple>
+          @if (loading()) {
+              <mat-option disabled>Loading...</mat-option>
+          } @else {
+              @for (client of clientsList; track client.id) {
+                <mat-option [value]="client.id">{{ client.name }}</mat-option>
+              }
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  }
+  
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button mat-dialog-close>No Thanks</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    mat-dialog-close
+    [disabled]="contactForm.invalid">Submit</button>
+</mat-dialog-actions>

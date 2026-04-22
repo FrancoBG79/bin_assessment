@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Contact, ContactsService } from '../services/contacts';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactDialog } from './contact-dialog/contact-dialog';
 
 @Component({
   selector: 'app-contacts',
@@ -39,7 +41,8 @@ export class ContactsComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  private readonly contactsService = inject(ContactsService)
+  private readonly contactsService = inject(ContactsService);
+  readonly dialog = inject(MatDialog);
   ngOnInit(): void {
     this.getAllContacts();
   }
@@ -71,6 +74,19 @@ export class ContactsComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openDialog(clientId?:string): void {
+      const dialogRef = this.dialog.open(ContactDialog, {
+        data: {clientId},
+        width: '400px',
+        disableClose: true,
+        autoFocus: true
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }
 
   ngOnDestroy(): void {
     this.destroy$.next();

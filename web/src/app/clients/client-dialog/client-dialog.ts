@@ -3,12 +3,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -19,7 +16,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from '@angular/material/select';
 import { MatOption } from "@angular/material/select";
 
-interface ClientDialogData {
+export interface DialogData {
   clientId: string;
 }
 
@@ -42,13 +39,14 @@ interface ClientDialogData {
   styleUrl: './client-dialog.scss',
 })
 export class ClientDialog implements OnInit, OnDestroy {
-  readonly clientId = inject<ClientDialogData>(MAT_DIALOG_DATA)?.clientId;
+  readonly clientId = inject<DialogData>(MAT_DIALOG_DATA)?.clientId;
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
   private readonly contactsService = inject(ContactsService)
 
   clientForm = new FormGroup({
+    id: new FormControl<string>(''),
     name: new FormControl<string>('', [Validators.required]),
     client_code: new FormControl<string>({ value: '', disabled: true }),
     no_linked_contacts: new FormControl({ value: [], disabled: true })
