@@ -65,3 +65,23 @@ body {
   align-items: center;     /* Vertically centers the spinner (optional) */
   padding-top: 2rem;       /* Adds some space from the top */
 }
+
+.table-actions {
+  display: flex;
+  justify-content: space-between; // Pushes filter left, button right
+  align-items: center;            // Vertically aligns them
+  gap: 16px;                      // Adds space between the two items
+  flex-wrap: wrap;                // Allows wrapping if space is tight
+
+  // Responsive: For tablets and phones (width 600px and below)
+  @media (max-width: 600px) {
+    flex-direction: column;       // Stacks items vertically
+    align-items: stretch;         // Stretches items to full width
+    gap: 8px;                     // Adjusts spacing for mobile
+    
+    // Ensure form field takes full width on mobile
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

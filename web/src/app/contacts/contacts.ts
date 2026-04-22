@@ -7,6 +7,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 import { Contacts } from '../services/contacts';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +23,8 @@ import { ToastrService } from 'ngx-toastr';
     MatTableModule, 
     MatSortModule, 
     MatPaginatorModule, 
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatButtonModule
     ],
   templateUrl: './contacts.html',
   styleUrl: './contacts.scss',
