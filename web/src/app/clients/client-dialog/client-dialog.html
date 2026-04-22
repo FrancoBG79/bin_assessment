@@ -6,7 +6,7 @@
       <mat-spinner></mat-spinner>
     </div>
   } @else {
-    <form class="centered-dialog-form" (ngSubmit)="onSubmit()" [formGroup]="clientForm">
+    <form class="centered-dialog-form" [formGroup]="clientForm">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name">
@@ -43,5 +43,6 @@
     mat-raised-button 
     color="primary" 
     mat-dialog-close
+    (click)="onSubmit()"
     [disabled]="clientForm.invalid">Submit</button>
 </mat-dialog-actions>

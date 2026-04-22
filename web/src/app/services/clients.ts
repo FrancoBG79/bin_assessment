@@ -51,9 +51,9 @@ export class ClientsServices {
     )
   }
 
-  putClient(clientID: string, client: Client): Observable<Client> {
+  putClient(client: Client): Observable<Client> {
     return this.httpClient.put<Client>(`${this.apiUrl}/clients`, client, {
-      params: { clientID }, observe: 'response'
+      observe: 'response'
     }).pipe(
       map((response: HttpResponse<Client>) => {
         return response.body as Client;

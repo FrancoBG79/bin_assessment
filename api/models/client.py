@@ -10,8 +10,7 @@ class Client(SQLModel, table=True):
     client_code: str
     no_linked_contacts: List[str] = Field(default=[], sa_column=Column(ARRAY(String)))
 
-class ClientRead(SQLModel):
-    id: uuid.UUID
+class ClientCreate(SQLModel):
     name: str
     client_code: str
-    no_linked_contacts: int
+    no_linked_contacts: List[str] = []

@@ -6,6 +6,7 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -15,10 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from '@angular/material/select';
 import { MatOption } from "@angular/material/select";
-
-export interface DialogData {
-  clientId: string;
-}
+import { Client, ClientsServices } from '../../services/clients';
 
 @Component({
   selector: 'app-create',
@@ -39,23 +37,29 @@ export interface DialogData {
   styleUrl: './client-dialog.scss',
 })
 export class ClientDialog implements OnInit, OnDestroy {
-  readonly clientId = inject<DialogData>(MAT_DIALOG_DATA)?.clientId;
+  readonly clientData = inject<Client>(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<ClientDialog>);
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
+  title = 'Add'
   private readonly contactsService = inject(ContactsService)
-
+  private readonly clientsServices = inject(ClientsServices)
   clientForm = new FormGroup({
     id: new FormControl<string>(''),
     name: new FormControl<string>('', [Validators.required]),
-    client_code: new FormControl<string>({ value: '', disabled: true }),
-    no_linked_contacts: new FormControl({ value: [], disabled: true })
+    client_code: new FormControl<string>({ value: 'ABC001', disabled: true }),
+    no_linked_contacts: new FormControl<string[]>({ value: [], disabled: true })
   })
 
   contactsList: Contact[] = []
 
   ngOnInit(): void {
     this.getAllClients();
+    if (this.clientData) {
+      this.title = 'Edit';
+      this.clientForm.patchValue(this.clientData)
+    } 
   }
 
   getAllClients(): void {
@@ -82,6 +86,38 @@ export class ClientDialog implements OnInit, OnDestroy {
 
   onSubmit() {
     this.loading.set(true);
+    const form = this.clientForm.getRawValue() as unknown as Client;
+    console.log('submit client', this.clientData)
+    if (this.clientData) {
+      this.clientsServices.putClient(form)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.dialogRef.close(response);
+            this.loading.set(false);
+          },
+          error: (error: Error) => {
+            console.error(error);
+            this.toastrService.error('Error in updating client', error.message);
+            this.loading.set(false);
+          }
+        });
+    } else {
+      console.log('post')
+      this.clientsServices.postClient(form)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.dialogRef.close(response);
+            this.loading.set(false);
+          },
+          error: (error: Error) => {
+            console.error(error);
+            this.toastrService.error('Error in updating client', error.message);
+            this.loading.set(false);
+          }
+        });
+    }
   }
 
   ngOnDestroy(): void {

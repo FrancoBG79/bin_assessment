@@ -66,16 +66,18 @@ export class ClientsComponent implements OnInit, OnDestroy  {
       })
   }
 
-  openDialog(clientId?:string): void {
+  openDialog(client?: Client): void {
     const dialogRef = this.dialog.open(ClientDialog, {
-      data: {clientId},
+      data: client,
       width: '400px',
       disableClose: true,
       autoFocus: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      if (result) {
+        this.getAllClients()
+      }
     });
   }
 

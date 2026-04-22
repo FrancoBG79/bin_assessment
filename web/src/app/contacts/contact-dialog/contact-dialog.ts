@@ -15,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from '@angular/material/select';
 import { MatOption } from "@angular/material/select";
-import { DialogData } from '../../clients/client-dialog/client-dialog';
 import { Client, ClientsServices } from '../../services/clients';
 import { email } from '@angular/forms/signals';
 import { Contact, ContactsService } from '../../services/contacts';
@@ -92,16 +91,18 @@ export class ContactDialog implements OnInit, OnDestroy {
     console.log('contact dialog submit')
     this.loading.set(true);
     const form = this.contactForm.getRawValue() as unknown as Contact;
-    if (this.contactData.id) {
+    if (this.contactData) {
       this.contactsService.putContact(form)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
             this.dialogRef.close(response);
+            this.loading.set(false);
           },
           error: (error: Error) => {
             console.error(error);
             this.toastrService.error('Error in updating client', error.message);
+            this.loading.set(false);
           }
         });
     } else {
@@ -110,14 +111,15 @@ export class ContactDialog implements OnInit, OnDestroy {
         .subscribe({
           next: (response) => {
             this.dialogRef.close(response);
+            this.loading.set(false);
           },
           error: (error: Error) => {
             console.error(error);
             this.toastrService.error('Error in updating client', error.message);
+            this.loading.set(false);
           }
         });
     }
-      
   }
 
   ngOnDestroy(): void {
