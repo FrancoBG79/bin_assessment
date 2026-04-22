@@ -8,7 +8,7 @@ class Contact(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str
     surname: str
-    email: str
+    email: str = Field(sa_column=Column(String, unique=True, index=True))
     no_of_clients: List[str] = Field(default=[], sa_column=Column(ARRAY(String)))
 
 class ContactCreate(SQLModel):

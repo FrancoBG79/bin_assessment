@@ -25,7 +25,12 @@ export class ContactsService {
       map((response: HttpResponse<Contact[]>) => {
         return response.body ?? [];
       }),
-      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); })
+      catchError((error: HttpErrorResponse) =>  { 
+        const { detail} = error.error;
+        if (detail.includes('email')) {
+          throw new Error(detail);
+        }
+        throw new Error(error.message); })
     )
   }
 

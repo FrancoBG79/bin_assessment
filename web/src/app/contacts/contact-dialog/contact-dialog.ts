@@ -112,9 +112,9 @@ export class ContactDialog implements OnInit, OnDestroy {
             this.dialogRef.close(response);
             this.loading.set(false);
           },
-          error: (error: Error) => {
+          error: (error) => {
             console.error(error);
-            this.toastrService.error('Error in updating client', error.message);
+            this.toastrService.error('Error in updating client', error);
             this.loading.set(false);
           }
         });
