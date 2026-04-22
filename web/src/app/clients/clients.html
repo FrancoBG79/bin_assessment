@@ -1,4 +1,4 @@
-<mat-tab-group class="secondary-tabs">
+<mat-tab-group class="secondary-tabs" (selectedTabChange)="onTabChange($event)">
   <mat-tab label="General">
     <div class="sub-content">
       <app-fields [entity]="'clients'"/>

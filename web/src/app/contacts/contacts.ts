@@ -1,5 +1,5 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs'
+import { Component, inject, OnDestroy, signal, ViewChild } from '@angular/core';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs'
 import { FieldsComponent } from '../fields/fields';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +31,7 @@ import { ContactDialog } from './contact-dialog/contact-dialog';
   templateUrl: './contacts.html',
   styleUrl: './contacts.scss',
 })
-export class ContactsComponent {
+export class ContactsComponent implements OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'no_of_clients', 'edit'];
   dataSource!: MatTableDataSource<Contact>;
   private destroy$ = new Subject<void>();
@@ -43,8 +43,11 @@ export class ContactsComponent {
 
   private readonly contactsService = inject(ContactsService);
   readonly dialog = inject(MatDialog);
-  ngOnInit(): void {
-    this.getAllContacts();
+
+  onTabChange(event: MatTabChangeEvent) {
+    if (event.tab.textLabel === 'Contact(s)') {
+      this.getAllContacts();
+    }
   }
 
   getAllContacts() {
