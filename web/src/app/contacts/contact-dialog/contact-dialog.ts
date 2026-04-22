@@ -88,7 +88,6 @@ export class ContactDialog implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log('contact dialog submit')
     this.loading.set(true);
     const form = this.contactForm.getRawValue() as unknown as Contact;
     if (this.contactData) {
