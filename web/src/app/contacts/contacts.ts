@@ -30,7 +30,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './contacts.scss',
 })
 export class ContactsComponent {
-  displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'no_of_clients'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'no_of_clients', 'edit'];
   dataSource!: MatTableDataSource<Contact>;
   private destroy$ = new Subject<void>();
   loading = signal(false);

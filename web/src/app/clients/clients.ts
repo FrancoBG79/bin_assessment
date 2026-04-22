@@ -29,7 +29,7 @@ import { Client, ClientsServices } from '../services/clients';
   styleUrl: './clients.scss',
 })
 export class ClientsComponent implements OnInit, OnDestroy  {
-  displayedColumns: string[] = ['id', 'name', 'client_code', 'no_linked_contacts'];
+  displayedColumns: string[] = ['id', 'name', 'client_code', 'no_linked_contacts', 'edit'];
   dataSource!: MatTableDataSource<Client>;
   private destroy$ = new Subject<void>();
   loading = signal(false);
