@@ -58,3 +58,10 @@ body {
 .secondary-tabs .mat-mdc-tab-header {
   border-bottom: 1px solid #e0e0e0;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center; /* Horizontally centers the spinner */
+  align-items: center;     /* Vertically centers the spinner (optional) */
+  padding-top: 2rem;       /* Adds some space from the top */
+}

@@ -8,7 +8,7 @@ export interface FieldDefinitions {
   field_type: string;
   compulsory: boolean;
   additional_information: string;
-  for_entity: string;
+  for_entity?: string;
 }
 
 import { environment } from '../../environments/environment';

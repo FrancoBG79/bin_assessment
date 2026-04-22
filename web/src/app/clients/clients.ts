@@ -1,36 +1,58 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs'
-import { FieldDefinitionsService } from '../services/field-definitions';
-import { Subject, takeUntil } from 'rxjs';
+import { FieldsComponent } from '../fields/fields';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { Clients } from '../services/clients';
 
 @Component({
   selector: 'app-clients',
-  imports: [MatTabsModule],
+  imports: [
+    MatTabsModule, 
+    FieldsComponent,
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatTableModule, 
+    MatSortModule, 
+    MatPaginatorModule, 
+    MatProgressSpinnerModule
+  ],
   templateUrl: './clients.html',
   styleUrl: './clients.scss',
 })
-export class ClientsComponent implements OnInit, OnDestroy {
+export class ClientsComponent implements OnInit, OnDestroy  {
+  displayedColumns: string[] = ['id', 'name', 'client_code', 'no_linked_contacts'];
+  dataSource!: MatTableDataSource<Clients>;
   private destroy$ = new Subject<void>();
-  loading = false;
-  private readonly fieldService = inject(FieldDefinitionsService);
+  loading = signal(false);
   toastrService = inject(ToastrService);
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
   ngOnInit(): void {
-    this.loading = true;
-    this.fieldService.getFieldDefinitions('clients')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('response', response);
-          this.loading = false;
-        },
-        error: (error: Error) => {
-          console.log(error);
-          this.toastrService.error('Error in fetching data: ', error.message);
-          this.loading = false;
-        }
-      })
+    this.dataSource = new MatTableDataSource<Clients>([]);
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   ngOnDestroy(): void {
