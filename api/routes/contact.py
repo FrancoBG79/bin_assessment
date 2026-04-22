@@ -2,8 +2,10 @@ import uuid
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
+from api.models.client import Client
 from api.models.contact import Contact, ContactCreate
 from api.database import get_session
+from .utils import sync_relationships
 
 router = APIRouter(prefix="/contacts", tags=["Contacts"])
 

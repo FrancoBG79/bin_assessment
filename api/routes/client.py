@@ -4,8 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from sqlalchemy import func, cast, Integer
 from api.models.client import Client, ClientCreate
+from api.models.contact import Contact
 from api.database import get_session
-from .utils import generate_client_code
+from .utils import generate_client_code, sync_relationships
 
 router = APIRouter(prefix="/clients", tags=["Clients"])
 
