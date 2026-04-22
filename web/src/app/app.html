@@ -1,4 +1,12 @@
-<mat-tab-group>
-  <mat-tab label="Clients"> <app-clients /> </mat-tab>
-  <mat-tab label="Contacts"> Content 2 </mat-tab>
+<mat-tab-group color="primary" mat-stretch-tabs="false" class="primary-tabs">
+  <mat-tab label="Clients">
+    <div class="tab-container">
+      <app-clients />
+    </div>
+  </mat-tab>
+  <mat-tab label="Contacts">
+    <div class="tab-container">
+      <app-contacts />
+    </div>
+  </mat-tab>
 </mat-tab-group>

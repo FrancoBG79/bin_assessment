@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClientsComponent } from './clients/clients';
+import { ContactsComponent } from './contacts/contacts';
 
 @Component({
   selector: 'app-root',
-  imports: [MatTabsModule, ClientsComponent],
+  imports: [MatTabsModule, ClientsComponent, ContactsComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
