@@ -8,8 +8,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { Contact } from '../services/contacts';
-import { Subject } from 'rxjs';
+import { Contact, ContactsService } from '../services/contacts';
+import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -39,15 +39,29 @@ export class ContactsComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  private readonly contactsService = inject(ContactsService)
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Contact>([]);
+    this.getAllContacts();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  getAllContacts() {
+    this.loading.set(true);
+    this.contactsService.getContacts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.dataSource = new MatTableDataSource<Contact>(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.loading.set(false);
+        },
+        error: (error: Error) => {
+          console.error(error)
+          this.toastrService.error('Error in fetching clients', error.message);
+          this.loading.set(false);
+        }
+      })
   }
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

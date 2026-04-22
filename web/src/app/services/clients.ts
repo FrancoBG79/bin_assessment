@@ -8,7 +8,7 @@ export interface Client {
   id: string;
   name: string;
   client_code: string;
-  no_linked_contacts: number;
+  no_linked_contacts: number | string[];
 }
 
 @Injectable({

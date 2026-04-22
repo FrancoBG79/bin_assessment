@@ -85,3 +85,42 @@ body {
     }
   }
 }
+
+.centered-dialog-form {
+  display: flex;
+  flex-direction: column; /* Stacks the input fields vertically */
+  align-items: center;    /* Centers them horizontally */
+  justify-content: center;
+  width: 100%;            /* Ensures the form fills the available width */
+}
+
+/* Title Styling */
+.dialog-title {
+  text-align: center;
+  padding-top: 20px;   // More space from the top
+  margin-bottom: 20px; // Space between title and form
+  font-weight: 500;
+}
+
+/* Form Container Styling */
+.centered-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box; /* This is the fix for the horizontal scrollbar */
+  padding: 0 10px;        /* Add padding here instead of margins */
+}
+
+.centered-dialog-form mat-form-field {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Action Button Styling */
+.dialog-actions {
+  display: flex;
+  justify-content: center; // Centers the buttons
+  gap: 15px;               // Space between buttons
+  padding: 20px !important; // More space around the buttons
+}

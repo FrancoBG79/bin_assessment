@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Client, ClientsServices } from '../services/clients';
 import { MatDialog } from '@angular/material/dialog';
+import { ClientDialog } from './client-dialog/client-dialog';
 
 @Component({
   selector: 'app-clients',
@@ -43,10 +44,10 @@ export class ClientsComponent implements OnInit, OnDestroy  {
   readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this.getClients()
+    this.getAllClients()
   }
 
-  getClients(): void {
+  getAllClients(): void {
     this.loading.set(true);
     this.clientsServices.getClients()
       .pipe(takeUntil(this.destroy$))
@@ -63,6 +64,19 @@ export class ClientsComponent implements OnInit, OnDestroy  {
           this.loading.set(false);
         }
       })
+  }
+
+  openDialog(clientId?:string): void {
+    const dialogRef = this.dialog.open(ClientDialog, {
+      data: {clientId},
+      width: '400px',
+      disableClose: true,
+      autoFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
   applyFilter(event: Event) {

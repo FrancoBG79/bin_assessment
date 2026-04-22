@@ -1,1 +1,46 @@
-<p>create works!</p>
+<h2 mat-dialog-title class="dialog-title">Add Client</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-spinner></mat-spinner>
+  } @else {
+    <form class="centered-dialog-form" (ngSubmit)="onSubmit()" [formGroup]="clientForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        @if (clientForm.get('name')?.hasError('required')) {
+          <mat-error>Name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" readonly>
+        <mat-label>Client Code</mat-label>
+        <input matInput formControlName="client_code">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contact</mat-label>
+        <mat-select formControlName="no_linked_contacts" multiple>
+          @if (loading()) {
+              <mat-option disabled>Loading...</mat-option>
+          } @else {
+              @for (contact of contactsList; track contact.id) {
+                <mat-option [value]="contact.id">{{ contact.name }}</mat-option>
+              }
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  }
+  
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button mat-dialog-close>No Thanks</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    mat-dialog-close
+    cdkFocusInitial
+    [disabled]="clientForm.invalid">Submit</button>
+</mat-dialog-actions>
