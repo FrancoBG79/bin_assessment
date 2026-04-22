@@ -8,7 +8,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { Contacts } from '../services/contacts';
+import { Contact } from '../services/contacts';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
@@ -31,7 +31,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ContactsComponent {
   displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'no_of_clients'];
-  dataSource!: MatTableDataSource<Contacts>;
+  dataSource!: MatTableDataSource<Contact>;
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
@@ -40,7 +40,7 @@ export class ContactsComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Contacts>([]);
+    this.dataSource = new MatTableDataSource<Contact>([]);
   }
 
   ngAfterViewInit() {

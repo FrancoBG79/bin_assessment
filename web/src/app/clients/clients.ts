@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { Clients } from '../services/clients';
+import { Client } from '../services/clients';
 
 @Component({
   selector: 'app-clients',
@@ -30,7 +30,7 @@ import { Clients } from '../services/clients';
 })
 export class ClientsComponent implements OnInit, OnDestroy  {
   displayedColumns: string[] = ['id', 'name', 'client_code', 'no_linked_contacts'];
-  dataSource!: MatTableDataSource<Clients>;
+  dataSource!: MatTableDataSource<Client>;
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
@@ -39,7 +39,7 @@ export class ClientsComponent implements OnInit, OnDestroy  {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Clients>([]);
+    this.dataSource = new MatTableDataSource<Client>([]);
   }
 
   ngAfterViewInit() {

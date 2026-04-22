@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { catchError, map, Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface FieldDefinitions {
   id: string;
   description: string;
@@ -11,7 +13,6 @@ export interface FieldDefinitions {
   for_entity?: string;
 }
 
-import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
