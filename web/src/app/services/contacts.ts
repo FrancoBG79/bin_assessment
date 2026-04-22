@@ -18,7 +18,7 @@ export class ContactsService {
   private readonly httpClient = inject(HttpClient);
 
   postContact(contact: Contact): Observable<Contact[]> {
-    return this.httpClient.get<Contact[]>(`${this.apiUrl}/contacts`, {
+    return this.httpClient.post<Contact[]>(`${this.apiUrl}/contacts`, contact, {
       observe: 'response'
     }).pipe(
       map((response: HttpResponse<Contact[]>) => {
@@ -41,6 +41,28 @@ export class ContactsService {
 
   getContact(contactId: string): Observable<Contact> {
     return this.httpClient.get<Contact>(`${this.apiUrl}/contacts`, {
+      params: { contactId }, observe: 'response'
+    }).pipe(
+      map((response: HttpResponse<Contact>) => {
+        return response.body as Contact;
+      }),
+      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); })
+    )
+  }
+
+  putContact(contactId: string, contact: Contact): Observable<Contact> {
+    return this.httpClient.put<Contact>(`${this.apiUrl}/contacts`, contact, {
+      params: { contactId }, observe: 'response'
+    }).pipe(
+      map((response: HttpResponse<Contact>) => {
+        return response.body as Contact;
+      }),
+      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); })
+    )
+  }
+
+  deleteContact(contactId: string): Observable<Contact> {
+    return this.httpClient.delete<Contact>(`${this.apiUrl}/contacts`, {
       params: { contactId }, observe: 'response'
     }).pipe(
       map((response: HttpResponse<Contact>) => {
