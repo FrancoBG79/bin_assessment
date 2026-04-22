@@ -5,6 +5,7 @@ import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Contact {
+  id: string;
   name: string;
   surname: string;
   email: string;

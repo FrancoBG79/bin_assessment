@@ -8,9 +8,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Client, ClientsServices } from '../services/clients';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-clients',
@@ -29,7 +30,7 @@ import { Client, ClientsServices } from '../services/clients';
   styleUrl: './clients.scss',
 })
 export class ClientsComponent implements OnInit, OnDestroy  {
-  displayedColumns: string[] = ['id', 'name', 'client_code', 'no_linked_contacts', 'edit'];
+  displayedColumns: string[] = ['row', 'name', 'client_code', 'no_linked_contacts', 'edit'];
   dataSource!: MatTableDataSource<Client>;
   private destroy$ = new Subject<void>();
   loading = signal(false);
@@ -39,20 +40,30 @@ export class ClientsComponent implements OnInit, OnDestroy  {
   @ViewChild(MatSort) sort!: MatSort;
 
   private readonly clientsServices = inject(ClientsServices)
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Client>([]);
-  }
+  readonly dialog = inject(MatDialog);
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  ngOnInit(): void {
+    this.getClients()
   }
 
   getClients(): void {
     this.loading.set(true);
-
+    this.clientsServices.getClients()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.dataSource = new MatTableDataSource<Client>(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.loading.set(false);
+        },
+        error: (error: Error) => {
+          console.error(error);
+          this.toastrService.error('Error in fetching clients', error.message);
+          this.loading.set(false);
+        }
+      })
   }
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

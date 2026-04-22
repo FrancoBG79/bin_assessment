@@ -1,5 +1,7 @@
-from fastapi import APIRouter
-from api.models.client import Client
+from fastapi import APIRouter, Depends
+from sqlmodel import Session, select
+from api.models.client import Client, ClientRead
+from api.database import get_session
 
 router = APIRouter(prefix="/clients", tags=["Clients"])
 
@@ -8,10 +10,17 @@ def create_client(client: Client):
     # Logic to save to DB goes here
     return client
 
-@router.get("/")
-def read_clients():
-    # Logic to fetch all clients goes here
-    return []
+@router.get("/", response_model=list[ClientRead])
+def read_clients(session: Session = Depends(get_session)):
+    statement = select(Client)
+    clients = session.exec(statement).all()
+    results = []
+    for client in clients:
+        client_data = client.model_dump()
+        client_data["no_linked_contacts"] = len(client.no_linked_contacts)
+        results.append(client_data)
+        
+    return results
 
 @router.get("/{client_id}")
 def read_client(client_id: str):

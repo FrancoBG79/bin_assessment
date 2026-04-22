@@ -9,3 +9,9 @@ class Client(SQLModel, table=True):
     name: str
     client_code: str
     no_linked_contacts: List[str] = Field(default=[], sa_column=Column(ARRAY(String)))
+
+class ClientRead(SQLModel):
+    id: uuid.UUID
+    name: str
+    client_code: str
+    no_linked_contacts: int

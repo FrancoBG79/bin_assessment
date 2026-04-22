@@ -29,3 +29,7 @@ def seed_fields(engine):
             session.add_all(data)
             session.commit()
             print("Database seeded with entities.")
+
+def get_session():
+    with Session(engine) as session:
+        yield session
