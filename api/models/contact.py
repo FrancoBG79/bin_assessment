@@ -10,3 +10,10 @@ class Contact(SQLModel, table=True):
     surname: str
     email: str
     no_of_clients: List[str] = Field(default=[], sa_column=Column(ARRAY(String)))
+
+class ContactCreate(SQLModel):
+    name: str
+    surname: str
+    email: str
+    no_of_clients: List[str] = []
+

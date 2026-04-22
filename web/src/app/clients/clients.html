@@ -40,7 +40,7 @@
 
             <ng-container matColumnDef="no_linked_contacts">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Linked Contacts </th>
-              <td mat-cell *matCellDef="let row"> {{row.no_linked_contacts}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.no_linked_contacts.length}} </td>
             </ng-container>
 
             <ng-container matColumnDef="edit">

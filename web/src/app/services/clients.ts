@@ -5,10 +5,10 @@ import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Client {
-  id: string;
+  id?: string;
   name: string;
   client_code: string;
-  no_linked_contacts: number | string[];
+  no_linked_contacts: string[];
 }
 
 @Injectable({

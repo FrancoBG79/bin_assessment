@@ -45,12 +45,12 @@
 
             <ng-container matColumnDef="no_of_clients">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Clients </th>
-              <td mat-cell *matCellDef="let row"> {{row.no_of_clients}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.no_of_clients.length}} </td>
             </ng-container>
 
             <ng-container matColumnDef="edit">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
-              <td mat-cell *matCellDef="let row"> <button matButton="filled" (click)="openDialog(row.id)">Edit</button> </td>
+              <td mat-cell *matCellDef="let row"> <button matButton="filled" (click)="openDialog(row)">Edit</button> </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

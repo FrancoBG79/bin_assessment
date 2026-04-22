@@ -5,11 +5,11 @@ import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Contact {
-  id: string;
+  id?: string;
   name: string;
   surname: string;
   email: string;
-  no_of_clients: number;
+  no_of_clients: string[];
 }
 @Injectable({
   providedIn: 'root',
@@ -51,9 +51,9 @@ export class ContactsService {
     )
   }
 
-  putContact(contactId: string, contact: Contact): Observable<Contact> {
+  putContact(contact: Contact): Observable<Contact> {
     return this.httpClient.put<Contact>(`${this.apiUrl}/contacts`, contact, {
-      params: { contactId }, observe: 'response'
+      observe: 'response'
     }).pipe(
       map((response: HttpResponse<Contact>) => {
         return response.body as Contact;

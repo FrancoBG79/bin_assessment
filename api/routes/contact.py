@@ -1,29 +1,80 @@
-from fastapi import APIRouter
-from api.models.contact import Contact
+import uuid
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel import Session, select
+from api.models.contact import Contact, ContactCreate
+from api.database import get_session
 
 router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
-@router.post("/")
-def create_contact(contact: Contact):
-    # Logic to save to DB goes here
+@router.post("/", response_model=Contact, status_code=status.HTTP_201_CREATED)
+def create_contact(contact: ContactCreate, db: Session = Depends(get_session)):
+    try:
+        db_contact = Contact.model_validate(contact)
+        db.add(db_contact)
+        db.commit()
+        db.refresh(db_contact)
+        return db_contact
+    except Exception as e:
+        db.rollback()
+        print(f"Error creating contact: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail="Database insertion failed"
+        )
+
+@router.get("/", response_model=List[Contact], status_code=status.HTTP_200_OK)
+def read_contacts(db: Session = Depends(get_session)):
+    try:
+        statement = select(Contact)
+        contacts = db.exec(statement).all()
+        return contacts
+    except Exception as e:
+        print(f"Error fetching contacts: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve contacts from the database."
+        )
+
+@router.get("/{contact_id}", response_model=Contact, status_code=status.HTTP_200_OK)
+def read_contact(contact_id: uuid.UUID, db: Session = Depends(get_session)):
+    contact = db.get(Contact, contact_id)
+    if not contact:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Contact with ID {contact_id} not found"
+        )
     return contact
 
-@router.get("/")
-def read_contacts():
-    # Logic to fetch all contacts goes here
-    return []
+@router.put("/", response_model=Contact, status_code=status.HTTP_200_OK)
+def update_contact(contact_data: Contact, db: Session = Depends(get_session)):
+    db_contact = db.get(Contact, contact_data.id)
+    
+    if not db_contact:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Contact with ID {contact_data.id} not found"
+        )
+    
+    try:
+        update_data = contact_data.model_dump(exclude={'id'})
+        for key, value in update_data.items():
+            setattr(db_contact, key, value)
+        
+        db.add(db_contact)
+        db.commit()
+        db.refresh(db_contact)
+        return db_contact
+        
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating contact: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update contact due to a database error."
+        )
 
-@router.get("/{contact_id}")
-def read_contact(contact_id: str):
-    # Logic to fetch one contact goes here
-    return {"message": f"Fetch contact {contact_id}"}
-
-@router.patch("/{contact_id}")
-def update_contact(contact_id: str, contact: Contact):
-    # Logic to update contact goes here
-    return contact
-
-@router.delete("/{contact_id}")
+@router.delete("/{contact_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_contact(contact_id: str):
-    # Logic to delete contact goes here
+    # Added the operation but was not part of assignment
     return {"message": f"Contact {contact_id} deleted"}

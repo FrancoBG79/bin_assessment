@@ -6,6 +6,7 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -17,6 +18,7 @@ import { MatOption } from "@angular/material/select";
 import { DialogData } from '../../clients/client-dialog/client-dialog';
 import { Client, ClientsServices } from '../../services/clients';
 import { email } from '@angular/forms/signals';
+import { Contact, ContactsService } from '../../services/contacts';
 
 @Component({
   selector: 'app-create',
@@ -37,7 +39,9 @@ import { email } from '@angular/forms/signals';
   styleUrl: './contact-dialog.scss',
 })
 export class ContactDialog implements OnInit, OnDestroy {
-  readonly clientId = inject<DialogData>(MAT_DIALOG_DATA)?.clientId;
+  readonly contactData = inject<Contact>(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<ContactDialog>);
+  title = 'Add'
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
@@ -47,15 +51,19 @@ export class ContactDialog implements OnInit, OnDestroy {
     name: new FormControl<string>('', [Validators.required]),
     surname: new FormControl<string>('', [Validators.required]),
     email: new FormControl<string>('', [Validators.required, Validators.email]),
-    no_of_clients: new FormControl({ value: [], disabled: true })
+    no_of_clients: new FormControl<string[]>({ value: [], disabled: true })
   });
 
   clientsList: Client[] = []
 
   private readonly clientsServices = inject(ClientsServices)
-
+  private readonly contactsService = inject(ContactsService)
   ngOnInit(): void {
     this.getAllContacts();
+    if (this.contactData) {
+      this.title = 'Edit';
+      this.contactForm.patchValue(this.contactData)
+    } 
   }
 
   getAllContacts() {
@@ -83,6 +91,33 @@ export class ContactDialog implements OnInit, OnDestroy {
   onSubmit() {
     console.log('contact dialog submit')
     this.loading.set(true);
+    const form = this.contactForm.getRawValue() as unknown as Contact;
+    if (this.contactData.id) {
+      this.contactsService.putContact(form)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.dialogRef.close(response);
+          },
+          error: (error: Error) => {
+            console.error(error);
+            this.toastrService.error('Error in updating client', error.message);
+          }
+        });
+    } else {
+      this.contactsService.postContact(form)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.dialogRef.close(response);
+          },
+          error: (error: Error) => {
+            console.error(error);
+            this.toastrService.error('Error in updating client', error.message);
+          }
+        });
+    }
+      
   }
 
   ngOnDestroy(): void {
