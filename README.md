@@ -31,7 +31,7 @@ Before you begin, ensure you have the following installed on your system:
 ---
 
 ## Project Structure
-```text
+
 ├── api/                  # FastAPI source code & requirements
 ├── web/                  # Angular source code
 ├── docker-compose.yml    # Database infrastructure orchestration
@@ -55,3 +55,4 @@ ng serve;
 
 ## DB issues
 python init_db.py
+```text
