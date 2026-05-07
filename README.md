@@ -44,7 +44,7 @@ docker-compose up -d
 ## Run API
 cd api;
 python -m venv venv;
-venv\Scripts\activate;
+. venv\Scripts\activate;
 pip install -r requirements.txt
 fastapi dev main.py
 
