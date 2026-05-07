@@ -1,17 +1,6 @@
 # Project Title
 
 A full-stack application leveraging an Angular frontend and a FastAPI backend, designed for seamless development and deployment.
-
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Prerequisites](#prerequisites)
-3. [Project Structure](#project-structure)
-4. [Getting Started](#getting-started)
-   - [Step 1: Database Setup](#step-1-database-setup)
-   - [Step 2: Backend (FastAPI)](#step-2-backend-fastapi)
-   - [Step 3: Frontend (Angular)](#step-3-frontend-angular)
-5. [Troubleshooting](#troubleshooting)
-
 ---
 
 ## Project Overview
@@ -31,11 +20,11 @@ Before you begin, ensure you have the following installed on your system:
 ---
 
 ## Project Structure
-```text
-├── api/                  # FastAPI source code & requirements
-├── web/                  # Angular source code
-├── docker-compose.yml    # Database infrastructure orchestration
-├── init_db.py            # Database initialization script
+
+├── api/                  # FastAPI source code & requirements\
+├── web/                  # Angular source code\
+├── docker-compose.yml    # Database infrastructure orchestration\
+├── init_db.py            # Database initialization script\
 └── README.md             # This documentation
 
 ## Run Docker
@@ -49,9 +38,10 @@ pip install -r requirements.txt
 fastapi dev main.py
 
 ## Run web
-cd web;
-npm install;
+cd web;\
+npm install;\
 ng serve;
 
 ## DB issues
 python init_db.py
+```text
