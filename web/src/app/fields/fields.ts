@@ -31,8 +31,24 @@ export class FieldsComponent implements AfterViewInit, OnDestroy {
   private readonly fieldService = inject(FieldDefinitionsService);
   toastrService = inject(ToastrService);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  private paginator!: MatPaginator;
+  private sort!: MatSort;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  setDataSourceAttributes() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
   ngAfterViewInit(): void {
     this.loading.set(true)
     this.fieldService.getFieldDefinitions('clients')
@@ -40,8 +56,7 @@ export class FieldsComponent implements AfterViewInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.dataSource = new MatTableDataSource(response);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+          this.setDataSourceAttributes();
           this.loading.set(false)
         },
         error: (error: Error) => {

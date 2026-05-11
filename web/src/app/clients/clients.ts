@@ -36,12 +36,27 @@ export class ClientsComponent implements OnDestroy  {
   private destroy$ = new Subject<void>();
   loading = signal(false);
   toastrService = inject(ToastrService);
+  private paginator!: MatPaginator;
+  private sort!: MatSort;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
 
   private readonly clientsServices = inject(ClientsServices)
   readonly dialog = inject(MatDialog);
+
+  setDataSourceAttributes() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
 
   onTabChange(event: MatTabChangeEvent) {
     if (event.tab.textLabel === 'Client(s)') {
@@ -56,8 +71,7 @@ export class ClientsComponent implements OnDestroy  {
       .subscribe({
         next: (response) => {
           this.dataSource = new MatTableDataSource<Client>(response);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+          this.setDataSourceAttributes();
           this.loading.set(false);
         },
         error: (error: Error) => {

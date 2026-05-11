@@ -38,11 +38,27 @@ export class ContactsComponent implements OnDestroy {
   loading = signal(false);
   toastrService = inject(ToastrService);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  private paginator!: MatPaginator;
+  private sort!: MatSort;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
 
   private readonly contactsService = inject(ContactsService);
   readonly dialog = inject(MatDialog);
+
+  setDataSourceAttributes() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
 
   onTabChange(event: MatTabChangeEvent) {
     if (event.tab.textLabel === 'Contact(s)') {
@@ -57,8 +73,7 @@ export class ContactsComponent implements OnDestroy {
       .subscribe({
         next: (response) => {
           this.dataSource = new MatTableDataSource<Contact>(response);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+          this.setDataSourceAttributes();
           this.loading.set(false);
         },
         error: (error: Error) => {
