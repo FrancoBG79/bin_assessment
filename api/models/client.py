@@ -19,6 +19,5 @@ class Client(SQLModel, table=True):
 
 class ClientCreate(SQLModel):
     name: str
-    client_code_prefix: str = Field(..., regex=r"^[A-Z]{3}$")
-    client_code_suffix: str = Field(..., regex=r"^\d{3}$")
+    client_code: str = Field(..., regex=r"^[A-Z]{3}\d{3}$")
     no_linked_contacts: List[str] = []

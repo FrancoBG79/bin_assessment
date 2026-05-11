@@ -10,23 +10,27 @@ from .utils import generate_client_code, sync_relationships
 
 router = APIRouter(prefix="/clients", tags=["Clients"])
 
-@router.post("", response_model=Client, status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_client(client: ClientCreate, db: Session = Depends(get_session)):
     try:
-        statement = select(func.max(cast(func.substring(Client.client_code, 4), Integer)))
-        last_number = db.exec(statement).one()
-        next_number = (last_number or 0) + 1
-        formatted_num = f"{next_number:03d}"
-        client_data = client.model_dump()
-        client_data["client_code"] = generate_client_code(client_data["name"], formatted_num)
-        db_client = Client(**client_data)
-        db.add(db_client)
-        db.commit()
-        db.refresh(db_client)
-        if db_client.no_linked_contacts:
-            sync_relationships(db, str(db_client.id), [], db_client.no_linked_contacts, Contact, 'no_of_clients')
-            db.commit()
-        return db_client
+        generated_client_code = generate_client_code(client.name)
+        print('\x1b[30;43m' + 'generated_client_code!' + '\x1b[0m')
+        print(generated_client_code)
+        # statement = select(func.max(cast(func.substring(Client.client_code, 4), Integer)))
+        # last_number = db.exec(statement).one()
+        # next_number = (last_number or 0) + 1
+        # formatted_num = f"{next_number:03d}"
+        # client_data = client.model_dump()
+        # client_data["client_code"] = generate_client_code(client_data["name"], formatted_num)
+        # db_client = Client(**client_data)
+        # db.add(db_client)
+        # db.commit()
+        # db.refresh(db_client)
+        # if db_client.no_linked_contacts:
+        #     sync_relationships(db, str(db_client.id), [], db_client.no_linked_contacts, Contact, 'no_of_clients')
+        #     db.commit()
+        # return db_client
+        # return {}
     except Exception as e:
         db.rollback()
         print(f"Error creating client: {e}")
