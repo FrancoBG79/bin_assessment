@@ -34,6 +34,9 @@ def create_client(client: ClientCreate, db: Session = Depends(get_session)):
         db.add(db_client)
         db.commit()
         db.refresh(db_client)
+        if db_client.no_linked_contacts:
+            sync_relationships(db, str(db_client.id), [], db_client.no_linked_contacts, Contact, 'no_of_clients')
+            db.commit()
         return db_client
     except Exception as e:
         db.rollback()
@@ -77,13 +80,13 @@ def update_client(client_data: Client, db: Session = Depends(get_session)):
 
     old_links = db_client.no_linked_contacts.copy()
     
-    update_data = client_data.model_dump(exclude={'id'})
+    update_data = client_data.model_dump(exclude={'id', 'client_code'})
     for key, value in update_data.items():
         setattr(db_client, key, value)
     
+    db.add(db_client)
     sync_relationships(db, str(db_client.id), old_links, client_data.no_linked_contacts, Contact, 'no_of_clients')
     
-    db.add(db_client)
     db.commit()
     db.refresh(db_client)
     return db_client

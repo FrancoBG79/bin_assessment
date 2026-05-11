@@ -68,9 +68,9 @@ def update_contact(contact_data: Contact, db: Session = Depends(get_session)):
     for key, value in update_data.items():
         setattr(db_contact, key, value)
     
+    db.add(db_contact)
     sync_relationships(db, str(db_contact.id), old_links, contact_data.no_of_clients, Client, 'no_linked_contacts')
     
-    db.add(db_contact)
     db.commit()
     db.refresh(db_contact)
     return db_contact
